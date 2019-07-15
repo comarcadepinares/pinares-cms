@@ -51,11 +51,11 @@
 </template>
 
 <script>
-import Login from './Login'
-import SignUp from './SignUp'
+import Login from '@/components/account/Login'
+import SignUp from '@/components/account/SignUp'
 
 export default {
-  name: 'header',
+  name: 'mainnav',
   components: {
     Login,
     SignUp

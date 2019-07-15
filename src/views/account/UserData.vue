@@ -45,7 +45,7 @@
 <script>
 import ws from '@/services/webservice'
 import Alert from '@/components/Alert'
-import AccountMenu from '@/components/AccountMenu'
+import AccountMenu from '@/components/account/AccountMenu'
 export default {
   name: 'userdata',
   data () {

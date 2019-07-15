@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store'
 import Home from '@/views/Home'
-import UserData from '@/views/UserData'
-import ChangePassword from '@/views/ChangePassword'
+import UserData from '@/views/account/UserData'
+import ChangePassword from '@/views/account/ChangePassword'
 
 Vue.use(Router)
 

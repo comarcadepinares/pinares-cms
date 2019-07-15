@@ -54,6 +54,7 @@
 <script>
 import ws from '@/services/webservice'
 import Alert from '@/components/Alert'
+
 export default {
   name: 'signUp',
   data: function () {
