@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import router from '@/router'
-import { getStore } from '@/store'
+import store from '@/store'
 
 const config = {
     baseURL: 'http://localhost:8000',
@@ -10,7 +10,7 @@ const config = {
     headers: {}
 }
 
-const AUTH_FAILED_CODES = [10001, 10002, 10003, 10004]
+const AUTH_FAILED_CODES = [1001, 1002, 1003, 1004]
 
 export default {
     request(method, endpoint, params = null, token = null) {
@@ -30,7 +30,8 @@ export default {
                     if (!error.response) {
                         reject(error.message)
                     } else {
-                        if (AUTH_FAILED_CODES.indexOf(error.response.data.error.code) > -1) {
+                        console.log(error.response.data.error)
+                        if (AUTH_FAILED_CODES.includes(error.response.data.error.code) > -1) {
                             this.handleAuthFailed()
                             resolve()
                         } else {
@@ -41,8 +42,7 @@ export default {
         })
     },
 
-    handleTokenExpired() {
-        const store = getStore()
+    handleAuthFailed() {
         // save the next route
         store.commit('setNextRoute', router.currentRoute.fullPath)
 
