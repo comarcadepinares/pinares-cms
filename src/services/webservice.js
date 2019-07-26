@@ -10,7 +10,7 @@ const config = {
     headers: {}
 }
 
-const AUTH_FAILED_CODES = [1001, 1002, 1003, 1004]
+const AUTH_FAILED_CODES = [1001, 1002]
 
 export default {
     request(method, endpoint, params = null, token = null) {
@@ -31,7 +31,7 @@ export default {
                         reject(error.message)
                     } else {
                         console.log(error.response.data.error)
-                        if (AUTH_FAILED_CODES.includes(error.response.data.error.code) > -1) {
+                        if (AUTH_FAILED_CODES.includes(error.response.data.error.code)) {
                             this.handleAuthFailed()
                             resolve()
                         } else {
