@@ -18,6 +18,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
+                        <th scope="col">Image</th>
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Lat/Long</th>
@@ -30,6 +31,7 @@
                 <tbody>
                     <tr v-for="town in towns" :key="town.slug">
                         <th>{{town.id}}</th>
+                        <td><img :src="town.image" width="100px"></td>
                         <td>{{town.name}}</td>
                         <td>{{town.description}}</td>
                         <td>{{town.location.coordinates}}</td>
