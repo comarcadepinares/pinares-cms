@@ -3,21 +3,25 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-function getUser () {
-  try {
-    if (localStorage) {
-      return JSON.parse(localStorage.getItem('user'))
-    }
-  } catch (error) {
-    localStorage.clear()
+let savedUser
+let savedTowns
+
+try {
+  if (localStorage) {
+    savedUser = JSON.parse(localStorage.getItem('user'))
+    savedTowns = JSON.parse(localStorage.getItem('towns')) || []
   }
+} catch (error) {
+  localStorage.clear()
 }
+
 
 export default new Vuex.Store({
   state: {
-    user: getUser(),
+    user: savedUser,
     token: localStorage.getItem('token'),
-    nextRoute: '/logged'
+    nextRoute: '/logged',
+    towns: savedTowns,
   },
   mutations: {
     setUser (state, user) {
@@ -31,11 +35,20 @@ export default new Vuex.Store({
     logout (state) {
       state.user = null
       state.token = null
+      state.towns = null
       localStorage.clear()
     },
     setNextRoute (state, nextRoute) {
       state.nextRoute = nextRoute
-    }
+    },
+    setTowns(state, towns) {
+      state.towns = towns
+      localStorage.setItem('towns', JSON.stringify(state.towns))
+    },
+    addTown(state, town) {
+      state.towns.push(town)
+      localStorage.setItem('towns', JSON.stringify(state.towns))
+    },
   },
   actions: {
 
