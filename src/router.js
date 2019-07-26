@@ -35,6 +35,12 @@ export default new Router({
       name: 'ChangePassword',
       component: ChangePassword,
       beforeEnter: requireAuth
+    },
+    {
+      path: '/towns',
+      name: 'Towns',
+      component: ChangePassword,
+      beforeEnter: requireAuth
     }
   ]
 })
