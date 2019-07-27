@@ -71,25 +71,25 @@
 </template>
 
 <script>
-import Login from "@/components/account/Login";
-import SignUp from "@/components/account/SignUp";
+import Login from '@/components/account/Login'
+import SignUp from '@/components/account/SignUp'
 
 export default {
-  name: "mainnav",
+  name: 'mainnav',
   components: {
     Login,
     SignUp
   },
   computed: {
-    user() {
-      return this.$store.state.user;
+    user () {
+      return this.$store.state.user
     }
   },
   methods: {
-    logout() {
-      this.$store.commit("logout");
-      this.$router.push("/");
+    logout () {
+      this.$store.commit('logout')
+      this.$router.push('/')
     }
   }
-};
+}
 </script>
