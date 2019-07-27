@@ -6,63 +6,72 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Name</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="name" />
+          <input type="text" class="form-control" id="name" v-if="town" :value="town.name" />
+          <input type="text" class="form-control" id="name" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Description</label>
         <div class="col-sm-10">
-          <textarea type="text" class="form-control" id="description" />
+          <textarea type="text" class="form-control" id="description" v-if="town" :value="town.description" />
+          <textarea type="text" class="form-control" id="description" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Image</label>
         <div class="col-sm-10">
-          <input type="file" class="form-control-file" id="image" v-on:change="onFileChange">
+          <img :src="town.image" width="100px" v-if="town">
+          <input type="file" class="form-control-file" id="image" v-on:change="onFileChange" >
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Latitude</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="latitude" />
+          <input type="number" class="form-control" id="latitude" v-if="town" :value="town.location.coordinates[0]" />
+          <input type="number" class="form-control" id="latitude" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Longitude</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="longitude" />
+          <input type="number" class="form-control" id="longitude" v-if="town" :value="town.location.coordinates[1]" />
+          <input type="number" class="form-control" id="longitude" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Address</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="address" />
+          <input type="text" class="form-control" id="address" v-if="town" :value="town.address" />
+          <input type="text" class="form-control" id="address" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Phone</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="phone" max="999999999" min="600000000" />
+          <input type="number" class="form-control" id="phone" max="999999999" min="600000000" v-if="town" :value="town.phone" />
+          <input type="number" class="form-control" id="phone" max="999999999" min="600000000" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Email</label>
         <div class="col-sm-10">
-          <input type="email" class="form-control" id="email" />
+          <input type="email" class="form-control" id="email" v-if="town" :value="town.email" />
+          <input type="email" class="form-control" id="email" v-else />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Web</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="web" />
+          <input type="text" class="form-control" id="web" v-if="town" :value="town.web" />
+          <input type="text" class="form-control" id="web" v-else />
         </div>
       </div>
 
@@ -71,7 +80,11 @@
       <Alert type="danger" :message="errorMessage" v-if="error"></Alert>
       <Alert type="success" :message="successMessage" v-if="success"></Alert>
 
-      <button type="submit" class="btn btn-primary col-12" v-on:click="createTown">Create town</button>
+      <div v-if="town">
+        <p><button type="submit" class="btn btn-primary col-12" v-on:click="editTown">Edit</button></p>
+        <p><button type="submit" class="btn btn-danger col-12" v-on:click="removeTown">Remove</button></p>
+      </div>
+      <button type="submit" class="btn btn-primary col-12" v-on:click="createTown" v-else>Create</button>
     </form>
   </div>
 
@@ -88,8 +101,17 @@ export default {
       errorMessage: '',
       success: false,
       successMessage: '',
+      town: null,
       file: null
     }
+  },
+  created: function () {
+    if (!this.town && this.$route.params.slug) {
+      this.town = this.$store.getters.getTown(this.$route.params.slug)
+      console.log(this.town)
+    }
+
+    return this.town
   },
   computed: {
     user () {
@@ -103,26 +125,7 @@ export default {
     createTown (event) {
       event.preventDefault()
 
-      const town = new FormData();
-      town.append('name', $('#name').val())
-      town.append('description', $('#description').val())
-      town.append('latitude', Number($('#latitude').val()))
-      town.append('longitude', Number($('#longitude').val()))
-      town.append('address', $('#address').val())
-      town.append('phone', Number($('#phone').val()))
-      town.append('email', $('#email').val())
-      town.append('web', $('#web').val())
-
-      if (this.file) {
-        town.append('image', this.file)
-      }
-
-      const validation = this.validate(town)
-      if (validation instanceof Error) {
-        this.error = true
-        this.errorMessage = validation
-        return
-      }
+      const town = this.getTownFromForm()
 
       ws.request('post', '/town', town, this.token)
         .then(response => {
@@ -135,9 +138,66 @@ export default {
         })
     },
 
+    editTown (event) {
+      event.preventDefault()
+
+      const town = this.getTownFromForm()
+
+      ws.request('put', `/town/${this.town.slug}`, town, this.token)
+        .then(response => {
+          this.$store.commit('updateTown', response)
+          this.$router.push('/towns')
+        })
+        .catch(error => {
+          this.error = true
+          this.errorMessage = error
+        })
+    },
+
+    removeTown (event) {
+      event.preventDefault()
+
+      ws.request('delete', `/town/${this.town.slug}`, this.token)
+        .then(response => {
+          this.$store.commit('removeTown', this.town)
+          this.$router.push('/towns')
+        })
+        .catch(error => {
+          this.error = true
+          this.errorMessage = error
+        })
+    },
+
     onFileChange (event) {
       const files = event.target.files
       this.file = files && files.length ? files[0] : null
+    },
+
+    getTownFromForm () {
+      const town = new FormData()
+      town.append('name', $('#name').val())
+      town.append('description', $('#description').val())
+      town.append('latitude', Number($('#latitude').val()))
+      town.append('longitude', Number($('#longitude').val()))
+      town.append('address', $('#address').val())
+      town.append('phone', Number($('#phone').val()))
+      town.append('email', $('#email').val())
+      town.append('web', $('#web').val())
+
+      if (this.file) {
+        town.append('image', this.file)
+      } else if (this.town && this.town.image) {
+        town.append('image', this.town.image)
+      }
+
+      const validation = this.validate(town)
+      if (validation instanceof Error) {
+        this.error = true
+        this.errorMessage = validation
+        return
+      }
+
+      return town
     },
 
     validate (town) {
@@ -157,7 +217,7 @@ export default {
       }
 
       const phone = town.get('phone')
-      if (!phone || isNaN(phone) || phone < 600000000 || phone > 999999999 ) {
+      if (!phone || isNaN(phone) || phone < 600000000 || phone > 999999999) {
         return Error('Phone is required. It should be 9 digits number.')
       }
 
@@ -167,7 +227,7 @@ export default {
       }
 
       const web = town.get('web')
-      if (!web || typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://')) ) {
+      if (!web || typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
         return Error('Web is required and should start with "https://" or "http://"')
       }
 

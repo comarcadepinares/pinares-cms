@@ -26,6 +26,7 @@
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
                         <th scope="col">Web</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,12 +34,15 @@
                         <th>{{town.id}}</th>
                         <td><img :src="town.image" width="100px"></td>
                         <td>{{town.name}}</td>
-                        <td>{{town.description}}</td>
+                        <td :title="town.description">{{town.description.substring(0, 10)}}</td>
                         <td>{{town.location.coordinates}}</td>
                         <td>{{town.address}}</td>
                         <td>{{town.phone}}</td>
                         <td>{{town.email}}</td>
                         <td>{{town.web}}</td>
+                        <td>
+                          <router-link :to="{ name: 'TownEdit', params: { slug: town.slug }}" class="btn btn-primary float-right">Edit</router-link>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -51,44 +55,43 @@
 import ws from '@/services/webservice'
 
 export default {
-    name: 'towns',
-    created() {
-        ws.request('get', '/town', null, this.token)
-            .then((response) => {
-                this.$store.commit('setTowns', response.towns)
-            })
-            .catch((error) => {
-                console.log('error', error)
-            })
+  name: 'towns',
+  created () {
+    ws.request('get', '/town', null, this.token)
+      .then((response) => {
+        this.$store.commit('setTowns', response.towns)
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+  },
+  computed: {
+    token () {
+      return this.$store.state.token
     },
-    computed: {
-        token() {
-            return this.$store.state.token
-        },
-        towns() {
-            return this.$store.state.towns
-        }
-    },
-    methods: {
-        addTown(event) {
-            event.preventDefault()
+    towns () {
+      return this.$store.state.towns
+    }
+  },
+  methods: {
+    remove (event, town) {
+      event.preventDefault()
 
-            const townName = $('#townName').val()
-            if (townName.length) {
-                const params = {
-                    name: townName
-                }
-
-                ws.request('post', '/town', params, this.token)
-                    .then((response) => {
-                        this.$store.commit('addTown', response)
-                        $('#townName').val('')
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-            }
+      const townName = $('#townName').val()
+      if (townName.length) {
+        const params = {
+          name: townName
         }
-    },
+
+        ws.request('delete', `/town/${town.slug}`, params, this.token)
+          .then((response) => {
+            this.$store.commit('removeTown', town)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    }
+  }
 }
 </script>

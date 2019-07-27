@@ -15,13 +15,12 @@ try {
   localStorage.clear()
 }
 
-
 export default new Vuex.Store({
   state: {
     user: savedUser,
     token: localStorage.getItem('token'),
     nextRoute: '/logged',
-    towns: savedTowns,
+    towns: savedTowns
   },
   mutations: {
     setUser (state, user) {
@@ -41,16 +40,25 @@ export default new Vuex.Store({
     setNextRoute (state, nextRoute) {
       state.nextRoute = nextRoute
     },
-    setTowns(state, towns) {
+    setTowns (state, towns) {
       state.towns = towns
       localStorage.setItem('towns', JSON.stringify(state.towns))
     },
-    addTown(state, town) {
+    addTown (state, town) {
       state.towns.push(town)
       localStorage.setItem('towns', JSON.stringify(state.towns))
     },
+    updateTown (state, town) {
+      state.towns.filter(t => t.id == town.id)
+      state.towns.push(town)
+      localStorage.setItem('towns', JSON.stringify(state.towns))
+    },
+    removeTown (state, town) {
+      state.towns.filter(t => t.id == town.id)
+      localStorage.setItem('towns', JSON.stringify(state.towns))
+    },
   },
-  actions: {
-
+  getters: {
+    getTown: (state) => (slug) => state.towns.find(t => t.slug == slug)
   }
 })
