@@ -30,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="town in towns" :key="town.slug">
+                    <tr v-for="town in towns" :key="town.id">
                         <th>{{town.id}}</th>
                         <td><img :src="town.image" width="100px"></td>
                         <td>{{town.name}}</td>
@@ -74,24 +74,7 @@ export default {
     }
   },
   methods: {
-    remove (event, town) {
-      event.preventDefault()
 
-      const townName = $('#townName').val()
-      if (townName.length) {
-        const params = {
-          name: townName
-        }
-
-        ws.request('delete', `/town/${town.slug}`, params, this.token)
-          .then((response) => {
-            this.$store.commit('removeTown', town)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
-    }
   }
 }
 </script>

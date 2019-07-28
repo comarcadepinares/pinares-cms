@@ -7,7 +7,6 @@ import ChangePassword from '@/views/account/ChangePassword'
 import Towns from '@/views/towns/Towns'
 import Town from '@/views/towns/Town'
 
-
 Vue.use(Router)
 
 function requireAuth (to, from, next) {
@@ -56,6 +55,12 @@ export default new Router({
     {
       path: '/towns/create',
       name: 'TownsCreate',
+      component: Town,
+      beforeEnter: requireSuperadminAuth
+    },
+    {
+      path: '/towns/:slug',
+      name: 'TownEdit',
       component: Town,
       beforeEnter: requireSuperadminAuth
     }
