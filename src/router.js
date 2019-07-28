@@ -6,6 +6,8 @@ import UserData from '@/views/account/UserData'
 import ChangePassword from '@/views/account/ChangePassword'
 import Towns from '@/views/towns/Towns'
 import Town from '@/views/towns/Town'
+import ActivityTypes from '@/views/activityTypes/ActivityTypes'
+import ActivityType from '@/views/activityTypes/ActivityType'
 
 Vue.use(Router)
 
@@ -54,7 +56,7 @@ export default new Router({
     },
     {
       path: '/towns/create',
-      name: 'TownsCreate',
+      name: 'TownCreate',
       component: Town,
       beforeEnter: requireSuperadminAuth
     },
@@ -62,6 +64,24 @@ export default new Router({
       path: '/towns/:slug',
       name: 'TownEdit',
       component: Town,
+      beforeEnter: requireSuperadminAuth
+    },
+    {
+      path: '/activity-types',
+      name: 'ActivityTypes',
+      component: ActivityTypes,
+      beforeEnter: requireSuperadminAuth
+    },
+    {
+      path: '/activity-types/create',
+      name: 'ActivityTypeCreate',
+      component: ActivityType,
+      beforeEnter: requireSuperadminAuth
+    },
+    {
+      path: '/activity-types/:slug',
+      name: 'ActivityTypeEdit',
+      component: ActivityType,
       beforeEnter: requireSuperadminAuth
     }
   ]

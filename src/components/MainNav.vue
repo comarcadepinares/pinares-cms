@@ -23,6 +23,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <router-link class="dropdown-item" to="/towns">Towns</router-link>
+                <router-link class="dropdown-item" to="/activity-types">Activity types</router-link>
               </div>
             </li>
             <li class="nav-item dropdown" v-if="user">
