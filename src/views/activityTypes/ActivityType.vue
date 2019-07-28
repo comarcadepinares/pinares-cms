@@ -60,7 +60,6 @@ export default {
   created: function () {
     if (!this.activityType && this.$route.params.slug) {
       this.activityType = this.$store.getters.getActivityType(this.$route.params.slug)
-      console.log(this.activityType)
     }
 
     return this.activityType
@@ -78,32 +77,34 @@ export default {
       event.preventDefault()
 
       const activityType = this.getActivityTypeFromForm()
-
-      ws.request('post', '/activity-type', activityType, this.token)
-        .then(response => {
-          this.$store.commit('addActivityType', response)
-          this.$router.push('/activity-types')
-        })
-        .catch(error => {
-          this.error = true
-          this.errorMessage = error
-        })
+      if (activityType) {
+        ws.request('post', '/activity-type', activityType, this.token)
+          .then(response => {
+            this.$store.commit('addActivityType', response)
+            this.$router.push('/activity-types')
+          })
+          .catch(error => {
+            this.error = true
+            this.errorMessage = error
+          })
+      }
     },
 
     editActivityType (event) {
       event.preventDefault()
 
       const activityType = this.getActivityTypeFromForm()
-
-      ws.request('put', `/activity-type/${this.activityType.slug}`, activityType, this.token)
-        .then(response => {
-          this.$store.commit('updateActivityType', response)
-          this.$router.push('/activity-types')
-        })
-        .catch(error => {
-          this.error = true
-          this.errorMessage = error
-        })
+      if (activityType) {
+        ws.request('put', `/activity-type/${this.activityType.slug}`, activityType, this.token)
+          .then(response => {
+            this.$store.commit('updateActivityType', response)
+            this.$router.push('/activity-types')
+          })
+          .catch(error => {
+            this.error = true
+            this.errorMessage = error
+          })
+      }
     },
 
     removeActivityType (event) {
@@ -127,8 +128,8 @@ export default {
 
     getActivityTypeFromForm () {
       const activityType = new FormData()
-      activityType.append('name', $('#name').val())
-      activityType.append('description', $('#description').val())
+      activityType.append('name', $('#name').val().trim())
+      activityType.append('description', $('#description').val().trim())
 
       if (this.file) {
         activityType.append('image', this.file)

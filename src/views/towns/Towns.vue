@@ -21,7 +21,7 @@
                         <th scope="col">Image</th>
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Lat/Long</th>
+                        <th scope="col">Location</th>
                         <th scope="col">Address</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
@@ -35,7 +35,7 @@
                         <td><img :src="town.image" width="100px"></td>
                         <td>{{town.name}}</td>
                         <td :title="town.description">{{town.description.substring(0, 10)}}</td>
-                        <td>{{town.location.coordinates}}</td>
+                        <td>{{town.location.type}}: {{town.location.coordinates}}</td>
                         <td>{{town.address}}</td>
                         <td>{{town.phone}}</td>
                         <td>{{town.email}}</td>

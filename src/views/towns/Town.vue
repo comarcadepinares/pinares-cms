@@ -28,18 +28,11 @@
       </div>
 
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Latitude</label>
+        <label class="col-sm-2 col-form-label">Location (gepoint)</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="latitude" v-if="town" :value="town.location.coordinates[0]" />
-          <input type="number" class="form-control" id="latitude" v-else />
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Longitude</label>
-        <div class="col-sm-10">
-          <input type="number" class="form-control" id="longitude" v-if="town" :value="town.location.coordinates[1]" />
-          <input type="number" class="form-control" id="longitude" v-else />
+          <textarea type="text" class="form-control" id="location" v-if="town" :value="JSON.stringify(town.location)" />
+          <textarea type="text" class="form-control" id="location" v-else />
+          <small class="form-text text-muted">Use <a href="http://geojson.io/#map=12/41.9646/-2.9031">geojson.io</a> and copy here (only geometry). Example: <strong>{"type":"Point","coordinates":[-2.931826114654541, 41.954184406468876]}</strong></small>
         </div>
       </div>
 
@@ -108,7 +101,6 @@ export default {
   created: function () {
     if (!this.town && this.$route.params.slug) {
       this.town = this.$store.getters.getTown(this.$route.params.slug)
-      console.log(this.town)
     }
 
     return this.town
@@ -126,32 +118,34 @@ export default {
       event.preventDefault()
 
       const town = this.getTownFromForm()
-
-      ws.request('post', '/town', town, this.token)
-        .then(response => {
-          this.$store.commit('addTown', response)
-          this.$router.push('/towns')
-        })
-        .catch(error => {
-          this.error = true
-          this.errorMessage = error
-        })
+      if (town) {
+        ws.request('post', '/town', town, this.token)
+          .then(response => {
+            this.$store.commit('addTown', response)
+            this.$router.push('/towns')
+          })
+          .catch(error => {
+            this.error = true
+            this.errorMessage = error
+          })
+      }
     },
 
     editTown (event) {
       event.preventDefault()
 
       const town = this.getTownFromForm()
-
-      ws.request('put', `/town/${this.town.slug}`, town, this.token)
-        .then(response => {
-          this.$store.commit('updateTown', response)
-          this.$router.push('/towns')
-        })
-        .catch(error => {
-          this.error = true
-          this.errorMessage = error
-        })
+      if (town) {
+        ws.request('put', `/town/${this.town.slug}`, town, this.token)
+          .then(response => {
+            this.$store.commit('updateTown', response)
+            this.$router.push('/towns')
+          })
+          .catch(error => {
+            this.error = true
+            this.errorMessage = error
+          })
+      }
     },
 
     removeTown (event) {
@@ -175,14 +169,13 @@ export default {
 
     getTownFromForm () {
       const town = new FormData()
-      town.append('name', $('#name').val())
-      town.append('description', $('#description').val())
-      town.append('latitude', Number($('#latitude').val()))
-      town.append('longitude', Number($('#longitude').val()))
-      town.append('address', $('#address').val())
-      town.append('phone', Number($('#phone').val()))
-      town.append('email', $('#email').val())
-      town.append('web', $('#web').val())
+      town.append('name', $('#name').val().trim())
+      town.append('description', $('#description').val().trim())
+      town.append('location', $('#location').val().trim())
+      town.append('address', $('#address').val().trim())
+      town.append('phone', Number($('#phone').val().trim()))
+      town.append('email', $('#email').val().trim())
+      town.append('web', $('#web').val().trim())
 
       if (this.file) {
         town.append('image', this.file)
@@ -231,17 +224,19 @@ export default {
         return Error('Web is required and should start with "https://" or "http://"')
       }
 
-      const latitude = town.get('latitude')
-      const longitude = town.get('longitude')
-      if (!latitude || isNaN(latitude) || !longitude || isNaN(longitude)) {
-        return Error('Latitude and Longitude are required')
+      let location
+      try {
+        location = JSON.parse(town.get('location'))
+      } catch (error) {
+        return Error('Invalid location')
       }
-      town.delete('latitude')
-      town.delete('longitude')
-      town.append('location', JSON.stringify({
-        type: 'Point',
-        coordinates: [latitude, longitude]
-      }))
+      if (!location ||
+          !location.type || location.type !== 'Point' ||
+          !location.coordinates || location.coordinates.length !== 2 ||
+          isNaN(Number(location.coordinates[0])) || isNaN(Number(location.coordinates[1]))
+      ) {
+        return Error('Location is required')
+      }
 
       const image = town.get('image')
       if (!image) {
