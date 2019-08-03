@@ -10,6 +10,8 @@ import ActivityTypes from '@/views/activityTypes/ActivityTypes'
 import ActivityType from '@/views/activityTypes/ActivityType'
 import Hotels from '@/views/hotels/Hotels'
 import Hotel from '@/views/hotels/Hotel'
+import Restaurants from '@/views/restaurants/Restaurants'
+import Restaurant from '@/views/restaurants/Restaurant'
 
 Vue.use(Router)
 
@@ -102,6 +104,24 @@ export default new Router({
       path: '/hotel/:slug',
       name: 'HotelEdit',
       component: Hotel,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/restaurants',
+      name: 'Restaurants',
+      component: Restaurants,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/restaurant/create',
+      name: 'Restaurant',
+      component: Restaurant,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/restaurant/:slug',
+      name: 'RestaurantEdit',
+      component: Restaurant,
       beforeEnter: requireAuth
     }
   ]

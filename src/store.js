@@ -7,6 +7,7 @@ let savedUser
 let savedTowns
 let savedActivityTypes
 let savedHotels
+let savedRestaurants
 
 try {
   if (localStorage) {
@@ -14,6 +15,7 @@ try {
     savedTowns = JSON.parse(localStorage.getItem('towns')) || []
     savedActivityTypes = JSON.parse(localStorage.getItem('activityTypes')) || []
     savedHotels = JSON.parse(localStorage.getItem('hotels')) || []
+    savedRestaurants = JSON.parse(localStorage.getItem('restaurants')) || []
   }
 } catch (error) {
   localStorage.clear()
@@ -26,7 +28,8 @@ export default new Vuex.Store({
     nextRoute: '/logged',
     towns: savedTowns,
     activityTypes: savedActivityTypes,
-    hotels: savedHotels
+    hotels: savedHotels,
+    restaurants: savedRestaurants
   },
   mutations: {
     setUser (state, user) {
@@ -98,11 +101,29 @@ export default new Vuex.Store({
     removeHotel (state, hotel) {
       state.hotels.filter(h => h.id === hotel.id)
       localStorage.setItem('hotels', JSON.stringify(state.hotels))
+    },
+    setRestaurants (state, restaurants) {
+      state.restaurants = restaurants
+      localStorage.setItem('restaurants', JSON.stringify(state.restaurants))
+    },
+    addRestaurant (state, restaurant) {
+      state.restaurants.push(restaurant)
+      localStorage.setItem('restaurants', JSON.stringify(state.restaurants))
+    },
+    updateRestaurant (state, restaurant) {
+      state.restaurants.filter(h => h.id === restaurant.id)
+      state.restaurants.push(restaurant)
+      localStorage.setItem('restaurants', JSON.stringify(state.restaurants))
+    },
+    removeRestaurant (state, restaurant) {
+      state.restaurants.filter(h => h.id === restaurant.id)
+      localStorage.setItem('restaurants', JSON.stringify(state.restaurants))
     }
   },
   getters: {
     getTown: (state) => (slug) => state.towns.find(t => t.slug === slug),
     getActivityType: (state) => (slug) => state.activityTypes.find(at => at.slug === slug),
-    getHotel: (state) => (slug) => state.hotels.find(h => h.slug === slug)
+    getHotel: (state) => (slug) => state.hotels.find(h => h.slug === slug),
+    getRestaurant: (state) => (slug) => state.restaurants.find(r => r.slug === slug)
   }
 })

@@ -32,6 +32,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <router-link class="dropdown-item" to="/hotels">Hotels</router-link>
+                <router-link class="dropdown-item" to="/restaurants">Restaurants</router-link>
               </div>
             </li>
           </ul>
