@@ -70,7 +70,11 @@ export default {
       return this.$store.state.token
     },
     hotels () {
-      return this.$store.state.hotels
+      if (this.$store.state.user.role == 'SuperAdmin') {
+        return this.$store.state.hotels
+      } else {
+        return this.$store.state.hotels.filter(hotel => hotel.userId === this.$store.state.user.id)
+      }
     }
   },
   methods: {
