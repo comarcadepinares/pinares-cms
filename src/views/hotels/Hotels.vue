@@ -20,6 +20,7 @@
                         <th scope="col">Id</th>
                         <th scope="col">Image</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Description</th>
                         <th scope="col">Location</th>
                         <th scope="col">Address</th>
@@ -34,6 +35,7 @@
                         <th>{{hotel.id}}</th>
                         <td><img :src="hotel.image" width="100px"></td>
                         <td>{{hotel.name}}</td>
+                        <td>{{hotel.type}}</td>
                         <td :title="hotel.description">{{hotel.description.substring(0, 10)}}</td>
                         <td>{{hotel.location.type}}: {{hotel.location.coordinates}}</td>
                         <td>{{hotel.address}}</td>
