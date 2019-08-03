@@ -8,6 +8,7 @@ let savedTowns
 let savedActivityTypes
 let savedHotels
 let savedRestaurants
+let savedServices
 
 try {
   if (localStorage) {
@@ -15,7 +16,7 @@ try {
     savedTowns = JSON.parse(localStorage.getItem('towns')) || []
     savedActivityTypes = JSON.parse(localStorage.getItem('activityTypes')) || []
     savedHotels = JSON.parse(localStorage.getItem('hotels')) || []
-    savedRestaurants = JSON.parse(localStorage.getItem('restaurants')) || []
+    savedServices = JSON.parse(localStorage.getItem('services')) || []
   }
 } catch (error) {
   localStorage.clear()
@@ -29,7 +30,8 @@ export default new Vuex.Store({
     towns: savedTowns,
     activityTypes: savedActivityTypes,
     hotels: savedHotels,
-    restaurants: savedRestaurants
+    restaurants: savedRestaurants,
+    services: savedServices
   },
   mutations: {
     setUser (state, user) {
@@ -46,6 +48,8 @@ export default new Vuex.Store({
       state.towns = null
       state.hotels = null
       state.activityTypes = null
+      state.restaurants = null
+      state.services = null
       localStorage.clear()
     },
     setNextRoute (state, nextRoute) {
@@ -118,12 +122,30 @@ export default new Vuex.Store({
     removeRestaurant (state, restaurant) {
       state.restaurants.filter(h => h.id === restaurant.id)
       localStorage.setItem('restaurants', JSON.stringify(state.restaurants))
+    },
+    setServices (state, services) {
+      state.services = services
+      localStorage.setItem('services', JSON.stringify(state.services))
+    },
+    addService (state, service) {
+      state.services.push(service)
+      localStorage.setItem('services', JSON.stringify(state.services))
+    },
+    updateService (state, service) {
+      state.services.filter(h => h.id === service.id)
+      state.services.push(service)
+      localStorage.setItem('services', JSON.stringify(state.services))
+    },
+    removeService (state, service) {
+      state.services.filter(h => h.id === service.id)
+      localStorage.setItem('services', JSON.stringify(state.services))
     }
   },
   getters: {
     getTown: (state) => (slug) => state.towns.find(t => t.slug === slug),
     getActivityType: (state) => (slug) => state.activityTypes.find(at => at.slug === slug),
     getHotel: (state) => (slug) => state.hotels.find(h => h.slug === slug),
-    getRestaurant: (state) => (slug) => state.restaurants.find(r => r.slug === slug)
+    getRestaurant: (state) => (slug) => state.restaurants.find(r => r.slug === slug),
+    getService: (state) => (slug) => state.services.find(s => s.slug === slug)
   }
 })

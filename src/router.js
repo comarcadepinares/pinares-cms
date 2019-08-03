@@ -12,6 +12,8 @@ import Hotels from '@/views/hotels/Hotels'
 import Hotel from '@/views/hotels/Hotel'
 import Restaurants from '@/views/restaurants/Restaurants'
 import Restaurant from '@/views/restaurants/Restaurant'
+import Services from '@/views/services/Services'
+import Service from '@/views/services/Service'
 
 Vue.use(Router)
 
@@ -122,6 +124,24 @@ export default new Router({
       path: '/restaurant/:slug',
       name: 'RestaurantEdit',
       component: Restaurant,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/services',
+      name: 'Services',
+      component: Services,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/service/create',
+      name: 'Service',
+      component: Service,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/service/:slug',
+      name: 'ServiceEdit',
+      component: Service,
       beforeEnter: requireAuth
     }
   ]
