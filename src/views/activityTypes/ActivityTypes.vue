@@ -49,7 +49,7 @@ export default {
   created () {
     ws.request('get', '/activity-type', null, this.token)
       .then((response) => {
-        this.$store.commit('setActivityType', response.activityTypes)
+        this.$store.commit('setActivityTypes', response.activityTypes)
       })
       .catch((error) => {
         console.log('error', error)

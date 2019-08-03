@@ -1,6 +1,7 @@
 <template>
   <div class="col-md-8 offset-md-2">
-    <h2>Create activity type</h2>
+    <h2 v-if="activityType">Edit activity type</h2>
+    <h2 v-else>Create activity type</h2>
     <hr><br>
     <form>
       <div class="form-group row">
