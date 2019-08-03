@@ -49,7 +49,7 @@
                 </tbody>
             </table>
         </div>
-        <p v-else>You don't have service</p>
+        <p v-else>You don't have any service</p>
     </div>
 </template>
 

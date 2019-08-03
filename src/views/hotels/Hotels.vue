@@ -49,7 +49,7 @@
                 </tbody>
             </table>
         </div>
-        <p v-else>You don't have hotel</p>
+        <p v-else>You don't have any hotel</p>
     </div>
 </template>
 

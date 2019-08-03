@@ -47,7 +47,7 @@
                 </tbody>
             </table>
         </div>
-        <p v-else>You don't have restaurant</p>
+        <p v-else>You don't have any restaurant</p>
     </div>
 </template>
 
@@ -70,7 +70,7 @@ export default {
       return this.$store.state.token
     },
     restaurants () {
-      if (this.$store.state.user.role == 'SuperAdmin') {
+      if (this.$store.state.user.role === 'SuperAdmin') {
         return this.$store.state.restaurants
       } else {
         return this.$store.state.restaurants.filter(restaurant => restaurant.userId === this.$store.state.user.id)
