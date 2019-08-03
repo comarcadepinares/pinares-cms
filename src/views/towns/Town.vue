@@ -1,6 +1,7 @@
 <template>
   <div class="col-md-8 offset-md-2">
-    <h2>Create town</h2>
+    <h2 v-if="town">Edit town</h2>
+    <h2 v-else>Create town</h2>
     <hr><br>
     <form>
       <div class="form-group row">
