@@ -37,7 +37,7 @@
                 </tbody>
             </table>
         </div>
-        <p v-else>You don't have activityTypes</p>
+        <p v-else>You don't have any activity type</p>
     </div>
 </template>
 

@@ -6,6 +6,7 @@ Vue.use(Vuex)
 let savedUser
 let savedTowns
 let savedActivityTypes
+let savedActivities
 let savedHotels
 let savedRestaurants
 let savedServices
@@ -15,6 +16,7 @@ try {
     savedUser = JSON.parse(localStorage.getItem('user'))
     savedTowns = JSON.parse(localStorage.getItem('towns')) || []
     savedActivityTypes = JSON.parse(localStorage.getItem('activityTypes')) || []
+    savedActivities = JSON.parse(localStorage.getItem('activities')) || []
     savedHotels = JSON.parse(localStorage.getItem('hotels')) || []
     savedServices = JSON.parse(localStorage.getItem('services')) || []
   }
@@ -29,6 +31,7 @@ export default new Vuex.Store({
     nextRoute: '/logged',
     towns: savedTowns,
     activityTypes: savedActivityTypes,
+    activities: savedActivities,
     hotels: savedHotels,
     restaurants: savedRestaurants,
     services: savedServices
@@ -48,6 +51,7 @@ export default new Vuex.Store({
       state.towns = null
       state.hotels = null
       state.activityTypes = null
+      state.activities = null
       state.restaurants = null
       state.services = null
       localStorage.clear()
@@ -88,6 +92,23 @@ export default new Vuex.Store({
     removeActivityType (state, activityType) {
       state.activityTypes.filter(at => at.id === activityType.id)
       localStorage.setItem('activityTypes', JSON.stringify(state.activityTypes))
+    },
+    setActivities (state, activities) {
+      state.activities = activities
+      localStorage.setItem('activities', JSON.stringify(state.activities))
+    },
+    addActivity (state, activity) {
+      state.activities.push(activity)
+      localStorage.setItem('activities', JSON.stringify(state.activities))
+    },
+    updateActivity (state, activity) {
+      state.activities.filter(h => h.id === activity.id)
+      state.activities.push(activity)
+      localStorage.setItem('activities', JSON.stringify(state.activities))
+    },
+    removeActivity (state, activity) {
+      state.activities.filter(h => h.id === activity.id)
+      localStorage.setItem('activities', JSON.stringify(state.activities))
     },
     setHotels (state, hotels) {
       state.hotels = hotels
@@ -144,6 +165,7 @@ export default new Vuex.Store({
   getters: {
     getTown: (state) => (slug) => state.towns.find(t => t.slug === slug),
     getActivityType: (state) => (slug) => state.activityTypes.find(at => at.slug === slug),
+    getActivity: (state) => (slug) => state.activities.find(a => a.slug === slug),
     getHotel: (state) => (slug) => state.hotels.find(h => h.slug === slug),
     getRestaurant: (state) => (slug) => state.restaurants.find(r => r.slug === slug),
     getService: (state) => (slug) => state.services.find(s => s.slug === slug)

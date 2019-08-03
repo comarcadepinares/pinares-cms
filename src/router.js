@@ -14,6 +14,8 @@ import Restaurants from '@/views/restaurants/Restaurants'
 import Restaurant from '@/views/restaurants/Restaurant'
 import Services from '@/views/services/Services'
 import Service from '@/views/services/Service'
+import Activities from '@/views/activities/Activities'
+import Activity from '@/views/activities/Activity'
 
 Vue.use(Router)
 
@@ -89,6 +91,24 @@ export default new Router({
       name: 'ActivityTypeEdit',
       component: ActivityType,
       beforeEnter: requireSuperadminAuth
+    },
+    {
+      path: '/activities',
+      name: 'Activities',
+      component: Activities,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/activity/create',
+      name: 'ActivityCreate',
+      component: Activity,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/activity/:slug',
+      name: 'ActivityEdit',
+      component: Activity,
+      beforeEnter: requireAuth
     },
     {
       path: '/hotels',
