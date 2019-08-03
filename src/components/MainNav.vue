@@ -19,7 +19,7 @@
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown" v-if="user && user.role == 'SuperAdmin'">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Superadmin
+                Admin
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <router-link class="dropdown-item" to="/towns">Towns</router-link>
@@ -31,10 +31,7 @@
                 Your content
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
+                <router-link class="dropdown-item" to="/hotels">Hotels</router-link>
               </div>
             </li>
           </ul>

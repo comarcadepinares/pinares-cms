@@ -6,12 +6,14 @@ Vue.use(Vuex)
 let savedUser
 let savedTowns
 let savedActivityTypes
+let savedHotels
 
 try {
   if (localStorage) {
     savedUser = JSON.parse(localStorage.getItem('user'))
     savedTowns = JSON.parse(localStorage.getItem('towns')) || []
     savedActivityTypes = JSON.parse(localStorage.getItem('activityTypes')) || []
+    savedHotels = JSON.parse(localStorage.getItem('hotels')) || []
   }
 } catch (error) {
   localStorage.clear()
@@ -23,7 +25,8 @@ export default new Vuex.Store({
     token: localStorage.getItem('token'),
     nextRoute: '/logged',
     towns: savedTowns,
-    activityTypes: savedActivityTypes
+    activityTypes: savedActivityTypes,
+    hotels: savedHotels
   },
   mutations: {
     setUser (state, user) {
@@ -38,6 +41,7 @@ export default new Vuex.Store({
       state.user = null
       state.token = null
       state.towns = null
+      state.hotels = null
       state.activityTypes = null
       localStorage.clear()
     },
@@ -61,7 +65,7 @@ export default new Vuex.Store({
       state.towns.filter(t => t.id === town.id)
       localStorage.setItem('towns', JSON.stringify(state.towns))
     },
-    setActivityType (state, activityTypes) {
+    setActivityTypes (state, activityTypes) {
       state.activityTypes = activityTypes
       localStorage.setItem('activityTypes', JSON.stringify(state.activityTypes))
     },
@@ -77,10 +81,28 @@ export default new Vuex.Store({
     removeActivityType (state, activityType) {
       state.activityTypes.filter(at => at.id === activityType.id)
       localStorage.setItem('activityTypes', JSON.stringify(state.activityTypes))
+    },
+    setHotels (state, hotels) {
+      state.hotels = hotels
+      localStorage.setItem('hotels', JSON.stringify(state.hotels))
+    },
+    addHotel (state, hotel) {
+      state.hotels.push(hotel)
+      localStorage.setItem('hotels', JSON.stringify(state.hotels))
+    },
+    updateHotel (state, hotel) {
+      state.hotels.filter(h => h.id === hotel.id)
+      state.hotels.push(hotel)
+      localStorage.setItem('hotels', JSON.stringify(state.hotels))
+    },
+    removeHotel (state, hotel) {
+      state.hotels.filter(h => h.id === hotel.id)
+      localStorage.setItem('hotels', JSON.stringify(state.hotels))
     }
   },
   getters: {
     getTown: (state) => (slug) => state.towns.find(t => t.slug === slug),
-    getActivityType: (state) => (slug) => state.activityTypes.find(at => at.slug === slug)
+    getActivityType: (state) => (slug) => state.activityTypes.find(at => at.slug === slug),
+    getHotel: (state) => (slug) => state.hotels.find(h => h.slug === slug)
   }
 })

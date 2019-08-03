@@ -8,6 +8,8 @@ import Towns from '@/views/towns/Towns'
 import Town from '@/views/towns/Town'
 import ActivityTypes from '@/views/activityTypes/ActivityTypes'
 import ActivityType from '@/views/activityTypes/ActivityType'
+import Hotels from '@/views/hotels/Hotels'
+import Hotel from '@/views/hotels/Hotel'
 
 Vue.use(Router)
 
@@ -83,6 +85,24 @@ export default new Router({
       name: 'ActivityTypeEdit',
       component: ActivityType,
       beforeEnter: requireSuperadminAuth
+    },
+    {
+      path: '/hotels',
+      name: 'Hotels',
+      component: Hotels,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/hotel/create',
+      name: 'HotelCreate',
+      component: Hotel,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/hotel/:slug',
+      name: 'HotelEdit',
+      component: Hotel,
+      beforeEnter: requireAuth
     }
   ]
 })
