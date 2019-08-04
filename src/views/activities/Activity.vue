@@ -214,7 +214,7 @@ export default {
       const validation = this.validate(activity)
       if (validation instanceof Error) {
         this.error = true
-        this.errorMessage = validation
+        this.errorMessage = validation.message
         return
       }
 

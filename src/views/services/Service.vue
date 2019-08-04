@@ -217,7 +217,7 @@ export default {
       const validation = this.validate(service)
       if (validation instanceof Error) {
         this.error = true
-        this.errorMessage = validation
+        this.errorMessage = validation.message
         return
       }
 
