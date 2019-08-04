@@ -16,6 +16,8 @@ import Services from '@/views/services/Services'
 import Service from '@/views/services/Service'
 import Activities from '@/views/activities/Activities'
 import Activity from '@/views/activities/Activity'
+import ActivityOptions from '@/views/activities/ActivityOptions'
+import ActivityOption from '@/views/activities/ActivityOption'
 
 Vue.use(Router)
 
@@ -108,6 +110,24 @@ export default new Router({
       path: '/activity/:slug',
       name: 'ActivityEdit',
       component: Activity,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/activity/:slug/options',
+      name: 'ActivityOptions',
+      component: ActivityOptions,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/activity/:slug/option/create',
+      name: 'ActivityOptionCreate',
+      component: ActivityOption,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/activity/:slug/option/:id',
+      name: 'ActivityOptionEdit',
+      component: ActivityOption,
       beforeEnter: requireAuth
     },
     {

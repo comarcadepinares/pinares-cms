@@ -42,7 +42,7 @@
                         <td>{{activity.email}}</td>
                         <td>{{activity.web}}</td>
                         <td>
-                          <button class="btn btn-secondary" v-on:click="showSchedule(activity)">Schedule</button>
+                          <router-link :to="{ name: 'ActivityOptions', params: { slug: activity.slug }}" class="btn btn-secondary float-right">Configure</router-link>
                         </td>
                         <td>
                           <router-link :to="{ name: 'ActivityEdit', params: { slug: activity.slug }}" class="btn btn-primary float-right">Edit</router-link>
@@ -60,6 +60,11 @@ import ws from '@/services/webservice'
 
 export default {
   name: 'activity',
+  data: function () {
+    return {
+      activity: {}
+    }
+  },
   created () {
     ws.request('get', '/activity', null, this.token)
       .then((response) => {
@@ -79,11 +84,6 @@ export default {
       } else {
         return this.$store.state.activities.filter(activity => activity.userId === this.$store.state.user.id)
       }
-    }
-  },
-  methods: {
-    showSchedule (activity) {
-      console.log(activity)
     }
   }
 }
