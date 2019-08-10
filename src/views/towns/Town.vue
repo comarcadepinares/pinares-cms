@@ -206,23 +206,39 @@ export default {
       }
 
       const address = town.get('address')
-      if (!address || typeof address !== 'string' || address.length > 128) {
-        return Error('Address is required, 128 characters or less')
+      if (address) {
+        if (typeof address !== 'string' || address.length > 128) {
+          return Error('Address should have 128 characters or less')
+        }
+      } else {
+        town.delete('address')
       }
 
       const phone = town.get('phone')
-      if (!phone || isNaN(phone) || phone < 600000000 || phone > 999999999) {
-        return Error('Phone is required. It should be 9 digits number.')
+      if (phone && phone != '0') {
+        if (isNaN(phone) || phone < 600000000 || phone > 999999999) {
+          return Error('Phone should be 9 digits number.')
+        }
+      } else {
+        town.delete('phone')
       }
 
       const email = town.get('email')
-      if (!email || typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
-        return Error('Email is required')
+      if (email) {
+        if (typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
+          return Error('Email is wrong')
+        }
+      } else {
+        town.delete('email')
       }
 
       const web = town.get('web')
-      if (!web || typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
-        return Error('Web is required and should start with "https://" or "http://"')
+      if (web) {
+        if (typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
+          return Error('Web should start with "https://" or "http://"')
+        }
+      } else {
+        town.delete('web')
       }
 
       let location
@@ -237,11 +253,6 @@ export default {
           isNaN(Number(location.coordinates[0])) || isNaN(Number(location.coordinates[1]))
       ) {
         return Error('Location is required')
-      }
-
-      const image = town.get('image')
-      if (!image) {
-        return Error('Image is required')
       }
 
       return true

@@ -20,12 +20,9 @@
                         <th scope="col">Id</th>
                         <th scope="col">Image</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Highlight</th>
                         <th scope="col">Description</th>
                         <th scope="col">Location</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Web</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -34,12 +31,9 @@
                         <th>{{restaurant.id}}</th>
                         <td><img :src="restaurant.image" width="100px"></td>
                         <td>{{restaurant.name}}</td>
+                        <td>{{restaurant.highlight}}</td>
                         <td :title="restaurant.description">{{restaurant.description.substring(0, 10)}}</td>
                         <td>{{restaurant.location.type}}: {{restaurant.location.coordinates}}</td>
-                        <td>{{restaurant.address}}</td>
-                        <td>{{restaurant.phone}}</td>
-                        <td>{{restaurant.email}}</td>
-                        <td>{{restaurant.web}}</td>
                         <td>
                           <router-link :to="{ name: 'RestaurantEdit', params: { slug: restaurant.slug }}" class="btn btn-primary float-right">Edit</router-link>
                         </td>

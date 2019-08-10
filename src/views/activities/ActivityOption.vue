@@ -381,7 +381,7 @@ export default {
         try {
           location = JSON.parse(location)
         } catch (error) {
-          return Error('Location is wrong1')
+          return Error('Location is wrong')
         }
         if (!location.type || location.type !== 'Point' ||
             !location.coordinates || location.coordinates.length !== 2 ||

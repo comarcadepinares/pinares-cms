@@ -5,19 +5,29 @@
     <hr><br>
     <form>
       <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="name" v-if="restaurant" :value="restaurant.name" />
+          <input type="text" class="form-control" id="name" v-else />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Highlight</label>
+        <div class="col-sm-10">
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="highlight" :checked="restaurant && restaurant.highlight">
+            <label class="form-check-label" for="highlight">Highlight</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
         <label class="col-sm-2 col-form-label">Town</label>
         <div class="col-sm-10">
           <select class="form-control" id="town">
             <option v-for="town in towns" :key="town.id" :value="town.id" :selected="restaurant && restaurant.townId == town.id">{{town.name}}</option>
           </select>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="name" v-if="restaurant" :value="restaurant.name" />
-          <input type="text" class="form-control" id="name" v-else />
         </div>
       </div>
 
@@ -182,9 +192,10 @@ export default {
 
     getRestaurantFromForm () {
       const restaurant = new FormData()
+      restaurant.append('name', $('#name').val().trim())
+      restaurant.append('highlight', $('#highlight').is(':checked'))
       restaurant.append('townId', $('#town').val())
       restaurant.append('type', $('#type').val())
-      restaurant.append('name', $('#name').val().trim())
       restaurant.append('description', $('#description').val().trim())
       restaurant.append('location', $('#location').val().trim())
       restaurant.append('address', $('#address').val().trim())
@@ -235,18 +246,30 @@ export default {
       }
 
       const phone = restaurant.get('phone')
-      if (!phone || isNaN(phone) || phone < 600000000 || phone > 999999999) {
-        return Error('Phone is required. It should be 9 digits number.')
+      if (phone && phone != '0') {
+        if (isNaN(phone) || phone < 600000000 || phone > 999999999) {
+          return Error('Phone should be 9 digits number.')
+        }
+      } else {
+        restaurant.delete('phone')
       }
 
       const email = restaurant.get('email')
-      if (!email || typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
-        return Error('Email is required')
+      if (email) {
+        if (typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
+          return Error('Email is wrong')
+        }
+      } else {
+        restaurant.delete('email')
       }
 
       const web = restaurant.get('web')
-      if (!web || typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
-        return Error('Web is required and should start with "https://" or "http://"')
+      if (web) {
+        if (typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
+          return Error('Web should start with "https://" or "http://"')
+        }
+      } else {
+        restaurant.delete('web')
       }
 
       let location

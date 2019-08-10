@@ -5,6 +5,24 @@
     <hr><br>
     <form>
       <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="name" v-if="service" :value="service.name" />
+          <input type="text" class="form-control" id="name" v-else />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Highlight</label>
+        <div class="col-sm-10">
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="highlight" :checked="service && service.highlight">
+            <label class="form-check-label" for="highlight">Highlight</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
         <label class="col-sm-2 col-form-label">Town</label>
         <div class="col-sm-10">
           <select class="form-control" id="town">
@@ -19,14 +37,6 @@
           <select class="form-control" id="type">
             <option v-for="type in types" :key="type" :value="type" :selected="service && service.type == type">{{type}}</option>
           </select>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="name" v-if="service" :value="service.name" />
-          <input type="text" class="form-control" id="name" v-else />
         </div>
       </div>
 
@@ -198,9 +208,10 @@ export default {
 
     getServiceFromForm () {
       const service = new FormData()
+      service.append('name', $('#name').val().trim())
+      service.append('highlight', $('#highlight').is(':checked'))
       service.append('townId', $('#town').val())
       service.append('type', $('#type').val())
-      service.append('name', $('#name').val().trim())
       service.append('description', $('#description').val().trim())
       service.append('location', $('#location').val().trim())
       service.append('address', $('#address').val().trim())
@@ -251,18 +262,30 @@ export default {
       }
 
       const phone = service.get('phone')
-      if (!phone || isNaN(phone) || phone < 600000000 || phone > 999999999) {
-        return Error('Phone is required. It should be 9 digits number.')
+      if (phone && phone != '0') {
+        if (isNaN(phone) || phone < 600000000 || phone > 999999999) {
+          return Error('Phone should be 9 digits number.')
+        }
+      } else {
+        service.delete('phone')
       }
 
       const email = service.get('email')
-      if (!email || typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
-        return Error('Email is required')
+      if (email) {
+        if (typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
+          return Error('Email is wrong')
+        }
+      } else {
+        service.delete('email')
       }
 
       const web = service.get('web')
-      if (!web || typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
-        return Error('Web is required and should start with "https://" or "http://"')
+      if (web) {
+        if (typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
+          return Error('Web should start with "https://" or "http://"')
+        }
+      } else {
+        service.delete('web')
       }
 
       let location

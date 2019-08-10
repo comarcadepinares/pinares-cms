@@ -20,12 +20,9 @@
                         <th scope="col">Id</th>
                         <th scope="col">Image</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Highlight</th>
                         <th scope="col">Description</th>
                         <th scope="col">Location</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Web</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -35,12 +32,9 @@
                         <th>{{activity.id}}</th>
                         <td><img :src="activity.image" width="100px"></td>
                         <td>{{activity.name}}</td>
+                        <td>{{activity.highlight}}</td>
                         <td :title="activity.description">{{activity.description.substring(0, 10)}}</td>
                         <td>{{activity.location.type}}: {{activity.location.coordinates}}</td>
-                        <td>{{activity.address}}</td>
-                        <td>{{activity.phone}}</td>
-                        <td>{{activity.email}}</td>
-                        <td>{{activity.web}}</td>
                         <td>
                           <router-link :to="{ name: 'ActivityOptions', params: { slug: activity.slug }}" class="btn btn-secondary float-right">Configure</router-link>
                         </td>

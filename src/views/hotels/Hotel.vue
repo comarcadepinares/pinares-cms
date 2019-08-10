@@ -5,6 +5,24 @@
     <hr><br>
     <form>
       <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="name" v-if="hotel" :value="hotel.name" />
+          <input type="text" class="form-control" id="name" v-else />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Highlight</label>
+        <div class="col-sm-10">
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="highlight" :checked="hotel && hotel.highlight">
+            <label class="form-check-label" for="highlight">Highlight</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
         <label class="col-sm-2 col-form-label">Town</label>
         <div class="col-sm-10">
           <select class="form-control" id="town">
@@ -19,14 +37,6 @@
           <select class="form-control" id="type">
             <option v-for="type in types" :key="type" :value="type" :selected="hotel && hotel.type == type">{{type}}</option>
           </select>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="name" v-if="hotel" :value="hotel.name" />
-          <input type="text" class="form-control" id="name" v-else />
         </div>
       </div>
 
@@ -197,9 +207,10 @@ export default {
 
     getHotelFromForm () {
       const hotel = new FormData()
+      hotel.append('name', $('#name').val().trim())
+      hotel.append('highlight', $('#highlight').is(':checked'))
       hotel.append('townId', $('#town').val())
       hotel.append('type', $('#type').val())
-      hotel.append('name', $('#name').val().trim())
       hotel.append('description', $('#description').val().trim())
       hotel.append('location', $('#location').val().trim())
       hotel.append('address', $('#address').val().trim())
@@ -250,18 +261,30 @@ export default {
       }
 
       const phone = hotel.get('phone')
-      if (!phone || isNaN(phone) || phone < 600000000 || phone > 999999999) {
-        return Error('Phone is required. It should be 9 digits number.')
+      if (phone && phone != '0') {
+        if (isNaN(phone) || phone < 600000000 || phone > 999999999) {
+          return Error('Phone should be 9 digits number.')
+        }
+      } else {
+        hotel.delete('phone')
       }
 
       const email = hotel.get('email')
-      if (!email || typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
-        return Error('Email is required')
+      if (email) {
+        if (typeof email !== 'string' || email.length > 128 || !email.includes('@') || !email.includes('.')) {
+          return Error('Email is wrong')
+        }
+      } else {
+        hotel.delete('email')
       }
 
       const web = hotel.get('web')
-      if (!web || typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
-        return Error('Web is required and should start with "https://" or "http://"')
+      if (web) {
+        if (typeof web !== 'string' || web.length > 128 || !(web.startsWith('https://') || web.startsWith('http://'))) {
+          return Error('Web should start with "https://" or "http://"')
+        }
+      } else {
+        hotel.delete('web')
       }
 
       let location
